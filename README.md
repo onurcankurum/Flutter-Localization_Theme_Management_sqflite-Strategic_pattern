@@ -1,8 +1,8 @@
 # Overview
 This is advanced base template included localization and Theme management. This project is upgraded version of  [my previous project](https://github.com/onurcankurum/
 Advanced-Fluttter-Base-Template-MVVM-State-Management) that include MVVM and State Management 
-![Alt Text](assets/dark_en.jpeg)
-![Alt Text](assets/light_en.jpeg)
+<img src="assets/dark_en.jpg" width="400">
+<img src="assets/light_de.jpg" width="400">
 
 # dependencies
 If you wonder what they does these depencies. Chekout the second header 
