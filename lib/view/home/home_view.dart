@@ -36,7 +36,8 @@ class _HomeViewState extends BaseState<HomeView> {
       );
 
   PreferredSizeWidget get appbar => AppBar(
-        title: const LocalText(value: LocaleKeys.welcome),
+        // ignore: prefer_const_constructors
+        title: LocalText(value: LocaleKeys.welcome),
       );
 
   Widget get floatActionButton => FloatingActionButton(
@@ -74,13 +75,13 @@ class _HomeViewState extends BaseState<HomeView> {
             onPressed: () {
               viewModel!.changeTheme(AppThemes.LIGHT);
             },
-            child: LocalText(value: LocaleKeys.light_Theme),
+            child: const LocalText(value: LocaleKeys.light_Theme),
           ),
           ElevatedButton(
             onPressed: () {
               viewModel!.changeTheme(AppThemes.DARK);
             },
-            child: LocalText(value: LocaleKeys.dark_Theme),
+            child: const LocalText(value: LocaleKeys.dark_Theme),
           ),
         ],
       ));
@@ -96,15 +97,17 @@ class _HomeViewState extends BaseState<HomeView> {
             onPressed: () {
               context.setLocale(LanguageManager.instance.enLocale);
             },
-            child: LocalText(value: LocaleKeys.en),
+            // ignore: prefer_const_constructors
+            child:  LocalText(value: LocaleKeys.en),
           ),
           ElevatedButton(
             onPressed: () {
               context.setLocale(LanguageManager.instance.germen);
-              viewModel!.changeTheme(AppThemes.DARK);
             },
-            child: LocalText(value: LocaleKeys.de),
+            // ignore: prefer_const_constructors
+            child:  LocalText(value: LocaleKeys.de),
           ),
+         
         ],
       ));
 }
