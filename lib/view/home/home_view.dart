@@ -75,13 +75,13 @@ class _HomeViewState extends BaseState<HomeView> {
             onPressed: () {
               viewModel!.changeTheme(AppThemes.LIGHT);
             },
-            child: const LocalText(value: LocaleKeys.light_Theme),
+            child: LocalText(value: LocaleKeys.light_Theme),
           ),
           ElevatedButton(
             onPressed: () {
               viewModel!.changeTheme(AppThemes.DARK);
             },
-            child: const LocalText(value: LocaleKeys.dark_Theme),
+            child: LocalText(value: LocaleKeys.dark_Theme),
           ),
         ],
       ));
