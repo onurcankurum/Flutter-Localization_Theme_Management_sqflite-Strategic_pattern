@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:first_three/core/components/text/locale_text.dart';
 import 'package:first_three/core/constants/navigation/navigation_constants.dart';
 import 'package:first_three/core/init/lang/locale_keys.g.dart';
