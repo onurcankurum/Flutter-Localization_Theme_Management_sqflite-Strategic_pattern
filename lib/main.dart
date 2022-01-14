@@ -6,6 +6,8 @@ import 'package:first_three/view/home/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'core/init/navigation/navigation_route.dart';
+import 'core/init/navigation/navigation_service.dart';
 import 'core/init/notifier/theme_notifier.dart';
 
 void main() async {
@@ -14,7 +16,7 @@ void main() async {
   runApp(MultiProvider(
     providers: [...ApplicationProvider.instance.dependItems],
     child: EasyLocalization(
-        child:  const MyApp(),
+        child: const MyApp(),
         supportedLocales: LanguageManager.instance.supportedLocales,
         path: ApplicationConstants.LANG_ASSET_PATH),
   ));
@@ -31,8 +33,11 @@ class MyApp extends StatelessWidget {
       supportedLocales: context.supportedLocales,
       localizationsDelegates: context.localizationDelegates,
       title: 'Flutter Demo',
+      onGenerateRoute: NavigationRoute.instance.generateRoute,
+      navigatorKey: NavigationService.instance.navigatorKey,
+      // navigatorObservers: [AnalytcisManager.instance.observer],
       theme: context.watch<ThemeNotifier>().currentTheme,
-      home: const HomeView(),
+      home: HomeView(),
     );
   }
 }

@@ -3,8 +3,10 @@ import 'package:first_three/core/base/state/base_state.dart';
 import 'package:first_three/core/base/view/base_view.dart';
 import 'package:first_three/core/components/text/locale_text.dart';
 import 'package:first_three/core/constants/app/enums/app_theme_enum.dart';
+import 'package:first_three/core/constants/navigation/navigation_constants.dart';
 import 'package:first_three/core/init/lang/language_manager.dart';
 import 'package:first_three/core/init/lang/locale_keys.g.dart';
+import 'package:first_three/core/init/navigation/navigation_service.dart';
 import 'package:first_three/view/home/home_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -48,9 +50,12 @@ class _HomeViewState extends BaseState<HomeView> {
       );
 
   Widget get body {
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [numberShow, themesButtonsWidget, languageButtonsWidget]);
+    return Column(mainAxisAlignment: MainAxisAlignment.start, children: [
+      numberShow,
+      themesButtonsWidget,
+      naviagateButtons,
+      languageButtonsWidget
+    ]);
   }
 
   Widget get numberShow => Container(
@@ -63,7 +68,6 @@ class _HomeViewState extends BaseState<HomeView> {
           );
         }),
       );
-
   Widget get themesButtonsWidget => Container(
       height: dynamicHeight(0.2),
       width: double.infinity,
@@ -75,14 +79,33 @@ class _HomeViewState extends BaseState<HomeView> {
             onPressed: () {
               viewModel!.changeTheme(AppThemes.LIGHT);
             },
+            // ignore: prefer_const_constructors
             child: LocalText(value: LocaleKeys.light_Theme),
           ),
           ElevatedButton(
             onPressed: () {
               viewModel!.changeTheme(AppThemes.DARK);
             },
+            // ignore: prefer_const_constructors
             child: LocalText(value: LocaleKeys.dark_Theme),
           ),
+        ],
+      ));
+
+  Widget get naviagateButtons => Container(
+      height: dynamicHeight(0.2),
+      width: double.infinity,
+      alignment: Alignment.center,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          ElevatedButton(
+              onPressed: () {
+                NavigationService.instance
+                    .navigateToPage(path: NavigationConstants.FIRST_PAGE);
+              },
+              // ignore: prefer_const_constructors
+              child: LocalText(value: LocaleKeys.next_page)),
         ],
       ));
 
@@ -98,16 +121,15 @@ class _HomeViewState extends BaseState<HomeView> {
               context.setLocale(LanguageManager.instance.enLocale);
             },
             // ignore: prefer_const_constructors
-            child:  LocalText(value: LocaleKeys.en),
+            child: LocalText(value: LocaleKeys.en),
           ),
           ElevatedButton(
             onPressed: () {
               context.setLocale(LanguageManager.instance.germen);
             },
             // ignore: prefer_const_constructors
-            child:  LocalText(value: LocaleKeys.de),
+            child: LocalText(value: LocaleKeys.de),
           ),
-         
         ],
       ));
 }

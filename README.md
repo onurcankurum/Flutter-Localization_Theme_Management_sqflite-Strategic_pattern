@@ -1,6 +1,5 @@
 # Overview
-This is advanced base template included localization and Theme management. This project is upgraded version of  [my previous project](https://github.com/onurcankurum/
-Advanced-Fluttter-Base-Template-MVVM-State-Management) that include MVVM and State Management 
+This is advanced base template included localization and Theme management. This project is upgraded version of  [my previous project](https://github.com/onurcankurum/Advanced-Fluttter-Base-Template-MVVM-State-Management) that include MVVM and State Management 
 <br>
 <img src="assets/dark_en.jpg" width="300">
 <img src="assets/light_de.jpg" width="300">
@@ -179,3 +178,88 @@ Can change the theme
   Provider.of<ThemeNotifier>(context!,listen: false).changeValue(AppThemes.DARK);
 
 ```
+# Navigation 
+This template project also include advanced navigation components. You can see this components at core/init/navigation folder.
+## lib/core/init/navigation/navigation_service.dart
+This singleton class is helps us for navigation management. 
+
+```dart
+class NavigationService implements INavigationService {
+  static final NavigationService _instance = NavigationService._init();
+  static NavigationService get instance => _instance;
+
+  NavigationService._init();
+
+  GlobalKey<NavigatorState> navigatorKey = GlobalKey();
+  final removeAllOldRoutes = (Route<dynamic> route) => false;
+
+  @override
+  Future<void> navigateToPage({String? path, Object? data}) async {
+    await navigatorKey.currentState!.pushNamed(path!, arguments: data);
+  }
+
+  @override
+  Future<void> navigateToPageClear({String? path, Object? data}) async {
+    await navigatorKey.currentState!.pushNamedAndRemoveUntil(path!, removeAllOldRoutes, arguments: data);
+  }
+}
+```
+## lib/core/init/navigation/navigation_route.dart
+This singleton class is helps us for generating routes. if you wanna add a new route then you should add a new case for your route in switch case field at shown below
+```dart
+class NavigationRoute {
+  static final NavigationRoute _instance = NavigationRoute._init();
+  static NavigationRoute get instance => _instance;
+
+  NavigationRoute._init();
+
+  Route<dynamic> generateRoute(RouteSettings args) {
+    switch (args.name) {
+      case NavigationConstants.HOME_VIEW:
+        return normalNavigate( const HomeView(), NavigationConstants.HOME_VIEW);
+      case NavigationConstants.FIRST_PAGE:
+        return normalNavigate(FirstPage(), NavigationConstants.FIRST_PAGE);
+      case NavigationConstants.SECOND_PAGE:
+        return normalNavigate(SecondPage(), NavigationConstants.SECOND_PAGE);
+      default:
+        return MaterialPageRoute(
+          builder: (context) =>  NotFound(),
+        );
+    }
+  }
+
+  MaterialPageRoute normalNavigate(Widget widget, String pageName) {
+    return MaterialPageRoute(
+        builder: (context) => widget,
+        //analytciste görülecek olan sayfa ismi için pageName veriyoruz
+        settings: RouteSettings(name: pageName));
+  }
+}
+```
+## main.dart
+In the end you must add your navigatorkey to navigatorKey in MaterialApp and Your route generator to onGenerateRoute in MaterialApp
+
+```dart
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      locale: context.locale,
+      supportedLocales: context.supportedLocales,
+      localizationsDelegates: context.localizationDelegates,
+      title: 'Flutter Demo',
+      onGenerateRoute: NavigationRoute.instance.generateRoute,
+      navigatorKey: NavigationService.instance.navigatorKey,
+      // navigatorObservers: [AnalytcisManager.instance.observer],
+      theme: context.watch<ThemeNotifier>().currentTheme,
+      home:   HomeView(),
+    );
+  }
+```
+## usage
+```dart
+ NavigationService.instance.navigateToPage(path: NavigationConstants.FIRST_PAGE); // to open new page
+ NavigationService.instance.navigateToPageClear(path:NavigationConstants.HOME_VIEW); // to popping untill specific page
+```
+
+
+
+
