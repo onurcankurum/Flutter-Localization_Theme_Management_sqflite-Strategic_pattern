@@ -19,21 +19,22 @@ class _FirstPageState extends BaseState<FirstPage> {
   }
 
   Widget get scaffold => Scaffold(appBar: appbar, body: Center(child: body));
-  PreferredSizeWidget get appbar => AppBar(title: LocalText(value: LocaleKeys.first_page));
+  PreferredSizeWidget get appbar =>
+      AppBar(title: LocalText(value: LocaleKeys.first_page));
   Widget get body => Center(child: buttons);
 
   Widget get buttons => Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           ElevatedButton(
-            child:  LocalText(value: LocaleKeys.next_page),
+            child: LocalText(value: LocaleKeys.next_page),
             onPressed: () {
               NavigationService.instance
                   .navigateToPage(path: NavigationConstants.SECOND_PAGE);
             },
           ),
           ElevatedButton(
-            child:  LocalText(value: LocaleKeys.previous_page),
+            child: LocalText(value: LocaleKeys.previous_page),
             onPressed: () {
               NavigationService.instance
                   .navigateToPageClear(path: NavigationConstants.HOME_VIEW);
