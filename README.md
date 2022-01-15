@@ -1,9 +1,10 @@
 # Overview
 This is advanced base template included localization, Theme management, Navigation management and sqflite with using strategic pattern. This project is upgraded version of  [my previous project](https://github.com/onurcankurum/Advanced-Fluttter-Base-Template-MVVM-State-Management) that include MVVM and State Management 
 <br>
-<img src="assets/screen_shots/dark_en.jpg" width="260">
-<img src="assets/screen_shots/light_de.jpg" width="260">
-<img src="assets/screen_shots/first_page.jpg" width="260">
+<img src="assets/screen_shots/dark_en.jpg" width="250">
+<img src="assets/screen_shots/light_de.jpg" width="250">
+<img src="assets/screen_shots/first_page.jpg" width="250">
+<img src="assets/screen_shots/database.jpg" width="250">
 
 # dependencies
 If you wonder what they does these depencies. Chekout the second header 
