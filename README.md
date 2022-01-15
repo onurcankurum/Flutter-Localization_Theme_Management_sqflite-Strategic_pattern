@@ -1,5 +1,5 @@
 # Overview
-This is advanced base template included localization and Theme management. This project is upgraded version of  [my previous project](https://github.com/onurcankurum/Advanced-Fluttter-Base-Template-MVVM-State-Management) that include MVVM and State Management 
+This is advanced base template included localization, Theme management, Navigation management and sqflite with using strategic pattern. This project is upgraded version of  [my previous project](https://github.com/onurcankurum/Advanced-Fluttter-Base-Template-MVVM-State-Management) that include MVVM and State Management 
 <br>
 <img src="assets/screen_shots/dark_en.jpg" width="260">
 <img src="assets/screen_shots/light_de.jpg" width="260">
@@ -18,6 +18,7 @@ dependencies:
   flutter_mobx: ^2.0.2
   mobx: ^2.0.5
   mobx_codegen: ^2.0.4
+  <strong>sqflite: ^2.0.2</strong>
   <strong>provider: ^6.0.1</strong>
 
 </pre>
@@ -255,12 +256,189 @@ In the end you must add your navigatorkey to navigatorKey in MaterialApp and You
     );
   }
 ```
-## usage
+## usage of navigation
 ```dart
  NavigationService.instance.navigateToPage(path: NavigationConstants.FIRST_PAGE); // to open new page
  NavigationService.instance.navigateToPageClear(path:NavigationConstants.HOME_VIEW); // to popping untill specific page
 ```
+# Sqflite
+With this package we will use sqllite with strategic pattern
 
+## lib/core/init/database/database_model.dart
+Our models should extends this generic abstract class.
+```dart
+abstract class DatabaseModel<T> {
+  T fromJson(Map<String, dynamic> json);
+  Map<String, dynamic> toJson();
+}
+```
+## lib/core/init/database/database_provider.dart
+Also each Models should have to own generic provider for standard CRUD operations.
 
+```dart
+abstract class DatabaseProvider<T extends DatabaseModel> {
+  Database? database;
 
+  Future open();
+  Future<T?> getItem(int id);
+  Future<List<T>> getItemList();
+  Future<bool> updateItem(int id,T model);
+  Future<bool> removeItem(int id);
+  Future<bool> insertItem(T model);
+  Future<void> removeAllItems();
+  Future<void> close() async {
+    if (database != null) {
+      await database!.close();
+    }
+  }
+}
+
+```
+## Example of model class | lib/view/second_page/model/user_model.dart
+```dart
+import 'package:first_three/core/init/database/database_model.dart';
+
+class UserModel extends DatabaseModel {
+  String? userName;
+  int? age;
+  int? isMarried;
+ 
+
+  UserModel({this.userName, this.age, this.isMarried});
+
+  UserModel.fromJson(Map<String, dynamic> json) {
+    userName = json['name'];
+    age = json['age'];
+    isMarried = json['isMarried'];
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data =  <String, dynamic>{};
+    data['name'] = userName;
+    data['age'] = age;
+    data['isMarried'] = isMarried;
+    return data;
+  }
+
+  @override
+  fromJson(Map<String, dynamic> json) {
+    return UserModel.fromJson(json);
+  }
+}
+
+```
+## Example of provider of model | lib/view/second_page/model/user_database_provider.dart
+```dart
+import 'package:first_three/core/init/database/database_model.dart';
+import 'package:first_three/core/init/database/database_provider.dart';
+import 'package:first_three/view/second_page/model/user_model.dart';
+import 'package:sqflite/sqflite.dart';
+
+class UserDataBaseProvider implements DatabaseProvider<UserModel> {
+  @override
+  Database? database;
+  final int version = 1;
+  final String _userDatabaseName = "advancedSqflite";
+  final String _userTableName = "users";
+
+  // table' s columns names
+  final String _columnId = "id";
+  final String _columnUserName = "name";
+  final String _columnUserAge = "age";
+  final String _columnIsMarried = "isMarried";
+
+  @override
+  Future<void> open() async {
+    database = await openDatabase(_userDatabaseName, version: version,
+        onCreate: (db, version) {
+      db.execute('''CREATE TABLE $_userTableName 
+          ( $_columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+            $_columnUserName VARCHAR(20),
+            $_columnUserAge INTEGER ,
+            $_columnIsMarried INTEGER )''');
+    });
+  }
+
+  @override
+  Future<List<UserModel>> getItemList() async {
+    if(database==null){
+      await open();
+    }
+    List<Map<String, dynamic>> userMap = await database!.query(_userTableName);
+    return userMap.map((e) => UserModel.fromJson(e)).toList();
+  }
+
+  @override
+  Future<UserModel?> getItem(int id) async {
+    
+    if(database==null){
+      await open();
+    }
+    List<Map<String, dynamic>> userMap = await database!.query(_userTableName,
+        where: '$_columnId = ?', columns: [_columnId], whereArgs: [id]);
+    if (userMap.isNotEmpty) {
+      return UserModel.fromJson(userMap.elementAt(0));
+    } else {
+      return null;
+    }
+  }
+
+  @override
+  Future<bool> removeItem(int id) async {
+    final int totalAffected = await database!
+        .delete(_userTableName, where: '$_columnId = ?', whereArgs: [id]);
+    if (totalAffected >= 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  Future<bool> insertItem(UserModel userModel) async {
+    final int isOk = await database!.insert(_userTableName, userModel.toJson());
+    if (isOk >= 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> updateItem(int id, UserModel model) async {
+    final int isOk = await database!.update(_userTableName, model.toJson(),
+        where: '$_columnId = ?', whereArgs: [id]);
+    if (isOk >= 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  @override
+  Future<void> close() async {
+    await database!.close();
+  }
+
+  @override
+  Future<void> removeAllItems() async {
+    // ignore: unused_local_variable
+    final int totalAffected = await database!.delete(_userTableName);
+  }
+
+}
+
+```
+## usage of this pattern
+
+Firstly create a provider instance in your view model class.
+```dart
+  UserDataBaseProvider userDataBaseProvider = UserDataBaseProvider();
+```
+finnaly access them like this
+```dart
+  viewModel!.userDataBaseProvider.open();
+  viewModel!.userDataBaseProvider.insertItem(userModel);//if userModel created before
+
+```
 

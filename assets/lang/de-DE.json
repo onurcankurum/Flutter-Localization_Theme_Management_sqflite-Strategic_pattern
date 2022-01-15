@@ -8,6 +8,14 @@
     "first_page":"erste Seite",
     "second_page":"zweite Seite",
     "next_page":"Nächste Seite",
-    "previous_page":"vorherige Seite"
+    "previous_page":"vorherige Seite",
+    "user_name":"Nutzername",
+    "save_user":"Benutzer speichern",
+    "delete_all":"alles löschen",
+    "back_to_home":"zurück nach Hause",
+    "age":"das Alter",
+    "database_page":"Datenbankseite"
+
+
 
 }

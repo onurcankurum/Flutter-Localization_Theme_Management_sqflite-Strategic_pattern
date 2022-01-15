@@ -2,7 +2,7 @@ import 'package:first_three/core/components/init/not_found_widget.dart';
 import 'package:first_three/core/constants/navigation/navigation_constants.dart';
 import 'package:first_three/view/first_page/first_page_view.dart';
 import 'package:first_three/view/home/home_view.dart';
-import 'package:first_three/view/second_page/secon_page.dart';
+import 'package:first_three/view/second_page/second_page.dart';
 import 'package:flutter/material.dart';
 
 class NavigationRoute {
