@@ -9,9 +9,11 @@ class SecondPageViewModel = _SecondPageViewModel with _$SecondPageViewModel;
 
 abstract class _SecondPageViewModel with Store {
   UserDataBaseProvider userDataBaseProvider = UserDataBaseProvider();
-  BuildContext? context;
+  // ignore: annotate_overrides
+  BuildContext? myContext;
+
 
   void setContext(BuildContext context) {
-    this.context = context;
+    this.myContext = context;
   }
 }

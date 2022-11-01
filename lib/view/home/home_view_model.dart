@@ -8,14 +8,14 @@ part 'home_view_model.g.dart';
 class HomeViewModel = _HomeViewModelBase with _$HomeViewModel;
 
 abstract class _HomeViewModelBase with Store {
-BuildContext? context;
+BuildContext? myContext;
 
 void setContext(BuildContext context){
-  this.context=context;
+  this.myContext=context;
 }
 
 void changeTheme(AppThemes theme){
-  Provider.of<ThemeNotifier>(context!,listen: false).changeValue(theme);
+  Provider.of<ThemeNotifier>(myContext!,listen: false).changeValue(theme);
 }
 
    @observable
